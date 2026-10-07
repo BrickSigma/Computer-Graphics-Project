@@ -46,6 +46,8 @@ In order to build the project, you only need to have a C/C++ compiler, such as M
 
 > [!NOTE]  
 > You do not need to download Raylib as the CMake build system has been configured to automatically download and build it for you, which should hopefully make it easier to setup and run.
+> 
+> The project may take a while to build the first time due to downloading and building Raylib, however all future builds will be much faster as CMake only rebuilds files that have been updated.
 
 From there, you can simply run the following in your favorite terminal emulator:
 

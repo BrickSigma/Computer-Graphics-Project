@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.11) # FetchContent is available in 3.11+
-project(Game)
+project(Game CXX)
 
 # Generate compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -28,11 +28,17 @@ add_executable(${PROJECT_NAME})
 # All source files will go here
 target_sources(${PROJECT_NAME}
 	PRIVATE
-		src/main.c
+		src/main.cpp
 )
 
+add_subdirectory(algorithms)
+
 #set(raylib_VERBOSE 1)
-target_link_libraries(${PROJECT_NAME} raylib)
+target_link_libraries(${PROJECT_NAME} 
+  PRIVATE
+    Algorithms
+    raylib
+  )
 
 # Web Configurations
 if (${PLATFORM} STREQUAL "Web")
