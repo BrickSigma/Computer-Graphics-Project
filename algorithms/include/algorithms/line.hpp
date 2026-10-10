@@ -6,7 +6,7 @@
 namespace Algorithms
 {
     /**
-     * Draw a 2D line with a pixel width of 1 on the screen.
+     * Draw a 2D line with a pixel width of 1 on the screen using Bresenham's Line Algorithm.
      * 
      * @param p1 point 1
      * @param p2 point 2

@@ -6,7 +6,7 @@ constexpr int GRID_ROWS = 2;
 constexpr int GRID_COLS = 5;
 constexpr int GRID_SPACING = 1;
 
-// Let each grid be 120x120 pixels
+// Let each grid be 200x200 pixels
 constexpr int GRID_SIZE = 200;
 
 // Size of title height
@@ -30,7 +30,7 @@ typedef struct DrawTest
 // Used to draw a line
 void draw_line()
 {
-	Algorithms::draw_line(Vector2{16, 16}, Vector2{GRID_SIZE - 16, GRID_SIZE - 16}, RED);
+	Algorithms::draw_line(Vector2{16, 16}, Vector2{185, 150}, RED); 
 }
 
 int main(int argc, char *argv[])
