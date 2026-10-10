@@ -1,6 +1,8 @@
+#include <cstddef>
 #include <raylib.h>
 
 #include "algorithms.hpp"
+#include "algorithms/polygon.hpp"
 
 constexpr int GRID_ROWS = 2;
 constexpr int GRID_COLS = 5;
@@ -30,7 +32,27 @@ typedef struct DrawTest
 // Used to draw a line
 void draw_line()
 {
-	Algorithms::draw_line(Vector2{16, 16}, Vector2{185, 150}, RED); 
+	Algorithms::draw_line(Vector2{16, 16}, Vector2{185, 150}, RED);
+}
+
+// Used to a polygon outline
+void draw_polygon()
+{
+    Vector2 points[] = {{40, 30}, {160, 50}, {180, 130}, {100, 175}, {30, 120}};
+    size_t count = sizeof(points) / sizeof(points[0]); // number of elements
+    Algorithms::draw_polygon_outline(points, count, BLUE);
+}
+
+// Used to draw a polygon outline clipped to a box
+void draw_polygon_clipped()
+{
+    Rectangle bounds = {25,25,150,150};// modify the bounds to show clipping
+    Vector2 star[] = {{100, 15}, {125, 80}, {190, 85}, {140, 125}, {160, 190},
+					  {100, 150}, {40, 190}, {60, 125}, {10, 85}, {75, 80}};
+    size_t  count = sizeof(star) / sizeof(star[0]);
+
+    DrawRectangleLines((int)bounds.x, (int)bounds.y, (int)bounds.width, (int)bounds.height, LIGHTGRAY); // show the clip box
+    Algorithms::draw_polygon_outline_clipped(star, count, bounds, RED);
 }
 
 int main(int argc, char *argv[])
@@ -44,8 +66,8 @@ int main(int argc, char *argv[])
 	// Register all of the drawing functions here using the callback above
 	DrawTest tests[NO_TESTS] = {
 		{draw_line, "Line"},
-		{NULL, "Algorithm 2"},  // Replace NULL with the drawing function callback
-		{NULL, "Algorithm 3"},
+		{draw_polygon, "Polygon Outline"},
+		{draw_polygon_clipped, "Polygon Clip"},
 		{NULL, "Algorithm 4"},
 		{NULL, "Algorithm 5"},
 		{NULL, "Algorithm 6"},
