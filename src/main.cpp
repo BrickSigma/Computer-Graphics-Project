@@ -55,6 +55,18 @@ void draw_polygon_clipped()
     Algorithms::draw_polygon_outline_clipped(star, count, bounds, RED);
 }
 
+
+void draw_curve()
+{
+    Algorithms::draw_curve();
+}
+
+void draw_bezier()
+{
+    Algorithms::draw_bezier();
+}
+
+
 int main(int argc, char *argv[])
 {
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Graphics Rendering Algorithms Showcase");
@@ -68,8 +80,8 @@ int main(int argc, char *argv[])
 		{draw_line, "Line"},
 		{draw_polygon, "Polygon Outline"},
 		{draw_polygon_clipped, "Polygon Clip"},
-		{NULL, "Algorithm 4"},
-		{NULL, "Algorithm 5"},
+		{draw_curve, "Curve"},
+		{draw_bezier, "Bezier Curve"},
 		{NULL, "Algorithm 6"},
 		{NULL, "Algorithm 7"},
 		{NULL, "Algorithm 8"},
