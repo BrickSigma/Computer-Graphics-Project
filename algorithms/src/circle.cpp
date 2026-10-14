@@ -47,6 +47,64 @@ static void fill_ellipse_scanlines(int cx, int cy, int x, int y, Color color)
     draw_horizontal_line(cx - x, cx + x, cy - y, color);
 }
 
+// 8 way symmetry for circles
+
+void Algorithms::draw_circle_outline(Vector2 center, float r, Color color)
+{
+    int cx = static_cast<int>(std::round(center.x));
+    int cy = static_cast<int>(std::round(center.y));
+    int radius = static_cast<int>(std::round(r));
+
+    int x = 0;
+    int y = radius;
+    int d = 1 - radius;
+
+    while (x <= y)
+    {
+        plot_circle_points(cx, cy, x, y, color);
+
+        if (d < 0)
+        {
+            d += 2 * x + 3;
+        }
+        else
+        {
+            d += 2 * (x - y) + 5;
+            y--;
+        }
+        x++;
+    }
+}
+
+void Algorithms::draw_circle_filled(Vector2 center, float r, Color color)
+{
+    int cx = static_cast<int>(std::round(center.x));
+    int cy = static_cast<int>(std::round(center.y));
+    int radius = static_cast<int>(std::round(r));
+
+    int x = 0;
+    int y = radius;
+    int d = 1 - radius;
+
+    while (x <= y)
+    {
+        fill_circle_scanlines(cx, cy, x, y, color);
+
+        if (d < 0)
+        {
+            d += 2 * x + 3;
+        }
+        else
+        {
+            d += 2 * (x - y) + 5;
+            y--;
+        }
+        x++;
+    }
+}
+
+// 4 way symmetry for ellipses
+
 void Algorithms::draw_ellipse_outline(Vector2 center, float major, float minor, Color color)
 {
     int cx = static_cast<int>(std::round(center.x));
@@ -54,32 +112,6 @@ void Algorithms::draw_ellipse_outline(Vector2 center, float major, float minor, 
     int rx = static_cast<int>(std::round(major));
     int ry = static_cast<int>(std::round(minor));
 
-    // 1. Midpoint Circle Algorithm (8-way symmetry) when radii are equal
-    if (rx == ry)
-    {
-        int x = 0;
-        int y = rx;
-        int d = 1 - rx; // Initial Bresenham/Midpoint decision parameter
-
-        while (x <= y)
-        {
-            plot_circle_points(cx, cy, x, y, color);
-
-            if (d < 0)
-            {
-                d += 2 * x + 3;
-            }
-            else
-            {
-                d += 2 * (x - y) + 5;
-                y--;
-            }
-            x++;
-        }
-        return;
-    }
-
-    // 2. Midpoint Ellipse Algorithm (4-way symmetry) when radii differ
     int x = 0;
     int y = ry;
 
@@ -91,7 +123,7 @@ void Algorithms::draw_ellipse_outline(Vector2 center, float major, float minor, 
     float dx = 0.0f;
     float dy = two_rx2 * y;
 
-    // Region 1: Slope magnitude is less than 1 (step in x)
+    // Region 1: Slope magnitude < 1 (step in x)
     float d1 = ry2 - (rx2 * ry) + (0.25f * rx2);
     while (dx < dy)
     {
@@ -113,7 +145,7 @@ void Algorithms::draw_ellipse_outline(Vector2 center, float major, float minor, 
         }
     }
 
-    // Region 2: Slope magnitude is greater than or equal to 1 (step in y)
+    // Region 2: Slope magnitude >= 1 (step in y)
     float d2 = (ry2 * (x + 0.5f) * (x + 0.5f)) +
                (rx2 * (y - 1.0f) * (y - 1.0f)) -
                (rx2 * ry2);
@@ -146,32 +178,6 @@ void Algorithms::draw_ellipse_filled(Vector2 center, float major, float minor, C
     int rx = static_cast<int>(std::round(major));
     int ry = static_cast<int>(std::round(minor));
 
-    // 1. Filled Midpoint Circle (8-way symmetry scanlines)
-    if (rx == ry)
-    {
-        int x = 0;
-        int y = rx;
-        int d = 1 - rx;
-
-        while (x <= y)
-        {
-            fill_circle_scanlines(cx, cy, x, y, color);
-
-            if (d < 0)
-            {
-                d += 2 * x + 3;
-            }
-            else
-            {
-                d += 2 * (x - y) + 5;
-                y--;
-            }
-            x++;
-        }
-        return;
-    }
-
-    // 2. Filled Midpoint Ellipse (4-way symmetry scanlines)
     int x = 0;
     int y = ry;
 
