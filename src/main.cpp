@@ -98,7 +98,8 @@ void draw_ellipse_filled()
 void draw_quadratic_curve(Vector2 start, Vector2 control,
                           Vector2 end, Color color)
 {
-    const int segments = 30;
+    // More segments produce smoother curves.
+    const int segments = 180;
     Vector2 previous = start;
 
     for (int i = 1; i <= segments; i++)
@@ -109,14 +110,11 @@ void draw_quadratic_curve(Vector2 start, Vector2 control,
         Vector2 current = {
             u * u * start.x + 2.0f * u * t * control.x
                 + t * t * end.x,
-
             u * u * start.y + 2.0f * u * t * control.y
                 + t * t * end.y
         };
 
-        // Use the existing line drawing algorithm.
         Algorithms::draw_line(previous, current, color);
-
         previous = current;
     }
 }
@@ -128,39 +126,40 @@ void draw_quadratic_curve(Vector2 start, Vector2 control,
 
 void draw_ball()
 {
-    Vector2 centre = {200, 200};
+    // Coordinates are multiplied by 3 for supersampling.
+    Vector2 centre = {540, 540};
 
-    // 1. Pink ball body
-    Algorithms::draw_circle_filled(centre, 140.0f, PINK);
+    // Pink ball body
+    Algorithms::draw_circle_filled(centre, 420.0f, PINK);
 
-    // 2. Curved seams across the ball
+    // Smooth curved seams
     draw_quadratic_curve(
-        {96, 144}, {200, 96}, {304, 144}, DARKBLUE);
+        {288, 432}, {540, 288}, {792, 432}, DARKBLUE);
 
     draw_quadratic_curve(
-        {96, 256}, {200, 304}, {304, 256}, DARKBLUE);
+        {288, 768}, {540, 912}, {792, 768}, DARKBLUE);
 
-    // 3. Straight lines forming the side patterns
+    // Straight panel lines
     Algorithms::draw_line(
-        {94, 176}, {164, 192}, DARKBLUE);
-
-    Algorithms::draw_line(
-        {94, 224}, {164, 208}, DARKBLUE);
+        {282, 528}, {492, 576}, DARKBLUE);
 
     Algorithms::draw_line(
-        {306, 176}, {236, 192}, DARKBLUE);
+        {282, 672}, {492, 624}, DARKBLUE);
 
     Algorithms::draw_line(
-        {306, 224}, {236, 208}, DARKBLUE);
+        {918, 528}, {708, 576}, DARKBLUE);
 
-    // 4. Hexagonal polygon in the centre
+    Algorithms::draw_line(
+        {918, 672}, {708, 624}, DARKBLUE);
+
+    // Central hexagonal polygon
     Vector2 panel[] = {
-        {200, 156},
-        {234, 180},
-        {234, 220},
-        {200, 244},
-        {166, 220},
-        {166, 180}
+        {540, 468},
+        {642, 540},
+        {642, 660},
+        {540, 732},
+        {438, 660},
+        {438, 540}
     };
 
     size_t count = sizeof(panel) / sizeof(panel[0]);
@@ -168,33 +167,63 @@ void draw_ball()
     Algorithms::draw_polygon_outline(
         panel, count, MAROON);
 
-    // 5. Outer circular border
+    // Outer border
     Algorithms::draw_circle_outline(
-        centre, 140.0f, DARKBLUE);
+        centre, 420.0f, DARKBLUE);
 }
+
 
 
 
 int main()
 {
-    // Create a window for the patterned ball only
-    InitWindow(400, 400, "Pink Patterned Ball");
+    constexpr int CANVAS_SIZE = 360;
+    constexpr int SCALE = 3;
+    constexpr int RENDER_SIZE = CANVAS_SIZE * SCALE;
 
+    InitWindow(CANVAS_SIZE, CANVAS_SIZE, "Pink Patterned Ball");
     SetTargetFPS(60);
+
+    // Render at 3x resolution for smoother edges.
+    RenderTexture canvas = LoadRenderTexture(
+        RENDER_SIZE, RENDER_SIZE);
+
+    SetTextureFilter(
+        canvas.texture, TEXTURE_FILTER_BILINEAR);
 
     while (!WindowShouldClose())
     {
-        BeginDrawing();
+        // Draw the ball on the high-resolution canvas.
+        BeginTextureMode(canvas);
+        ClearBackground(RAYWHITE);
+        draw_ball();
+        EndTextureMode();
 
-        // Light background around the ball
+        BeginDrawing();
         ClearBackground(RAYWHITE);
 
-        // Draw only the patterned ball
-        draw_ball();
+        // Scale the rendered image down to 360x360.
+        DrawTexturePro(
+            canvas.texture,
+            Rectangle{
+                0, 0,
+                static_cast<float>(RENDER_SIZE),
+                -static_cast<float>(RENDER_SIZE)
+            },
+            Rectangle{
+                0, 0,
+                static_cast<float>(CANVAS_SIZE),
+                static_cast<float>(CANVAS_SIZE)
+            },
+            Vector2{0, 0},
+            0.0f,
+            WHITE
+        );
 
         EndDrawing();
     }
 
+    UnloadRenderTexture(canvas);
     CloseWindow();
 
     return 0;
