@@ -90,13 +90,30 @@ void draw_ellipse_filled()
 	Algorithms::draw_ellipse_filled(Vector2{100, 100}, 80.0f, 45.0f, PURPLE);
 }
 
+// Using a globally filled polygon (not a good idea, but it works for the sake of it)
+RenderTexture2D filled_polygon;
+
+// Used to draw a polygon outline clipped to a box
+void draw_polygon_filled()
+{
+    DrawTexture(filled_polygon.texture, 0, 0, WHITE);
+}
+
+RenderTexture2D canvas;
+
 int main(int argc, char *argv[])
 {
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Graphics Rendering Algorithms Showcase");
 
 	// Create a rendering canvas for drawing the algorithms to. Set as GRID_SIZE x GRID_SIZE pixels
 	// Make sure to unload later!!!
-	RenderTexture canvas = LoadRenderTexture(GRID_SIZE, GRID_SIZE);
+	canvas = LoadRenderTexture(GRID_SIZE, GRID_SIZE);
+
+	filled_polygon = LoadRenderTexture(GRID_SIZE, GRID_SIZE);
+	Vector2 star[] = {{100, 15}, {125, 80}, {190, 85}, {140, 125}, {160, 190},
+					  {100, 150}, {40, 190}, {60, 125}, {10, 85}, {75, 80}};
+    size_t  count = sizeof(star) / sizeof(star[0]);
+	Algorithms::draw_polygon_filled(filled_polygon, star, count, PINK);
 
 	// Register all of the drawing functions here using the callback above
 	DrawTest tests[NO_TESTS] = {
@@ -109,7 +126,7 @@ int main(int argc, char *argv[])
 		{draw_circle_filled, "Circle Filled"},
 		{draw_ellipse_outline, "Ellipse Outline"},
 		{draw_ellipse_filled, "Ellipse Filled"},
-		{NULL, "Algorithm 10"},
+		{draw_polygon_filled, "Filled Polygon"},
 		{NULL, "Algorithm 11"},
 		{NULL, "Algorithm 12"},
 	};
@@ -166,6 +183,7 @@ int main(int argc, char *argv[])
 
 	// Release any allocated objects, like the RenderTexture
 	UnloadRenderTexture(canvas);
+	UnloadRenderTexture(filled_polygon);
 
 	CloseWindow();
 
