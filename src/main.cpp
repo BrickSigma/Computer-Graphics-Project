@@ -9,7 +9,7 @@ constexpr int GRID_COLS = 6;
 constexpr int GRID_SPACING = 1;
 
 // Let each grid be 200x200 pixels
-constexpr int GRID_SIZE = 200;
+constexpr int GRID_SIZE = 300;
 
 // Size of title height
 constexpr int GRID_TITLE = 64;
@@ -38,32 +38,30 @@ void draw_line()
 // Used to a polygon outline
 void draw_polygon()
 {
-    Vector2 points[] = {{40, 30}, {160, 50}, {180, 130}, {100, 175}, {30, 120}};
-    size_t count = sizeof(points) / sizeof(points[0]); // number of elements
-    Algorithms::draw_polygon_outline(points, count, BLUE);
+	Vector2 points[] = {{40, 30}, {160, 50}, {180, 130}, {100, 175}, {30, 120}};
+	size_t count = sizeof(points) / sizeof(points[0]); // number of elements
+	Algorithms::draw_polygon_outline(points, count, BLUE);
 }
 
 // Used to draw a polygon outline clipped to a box
 void draw_polygon_clipped()
 {
-    Rectangle bounds = {25,25,150,150};// modify the bounds to show clipping
-    Vector2 star[] = {{100, 15}, {125, 80}, {190, 85}, {140, 125}, {160, 190},
-					  {100, 150}, {40, 190}, {60, 125}, {10, 85}, {75, 80}};
-    size_t  count = sizeof(star) / sizeof(star[0]);
+	Rectangle bounds = {25, 25, 150, 150}; // modify the bounds to show clipping
+	Vector2 star[] = {{100, 15}, {125, 80}, {190, 85}, {140, 125}, {160, 190}, {100, 150}, {40, 190}, {60, 125}, {10, 85}, {75, 80}};
+	size_t count = sizeof(star) / sizeof(star[0]);
 
-    DrawRectangleLines((int)bounds.x, (int)bounds.y, (int)bounds.width, (int)bounds.height, LIGHTGRAY); // show the clip box
-    Algorithms::draw_polygon_outline_clipped(star, count, bounds, RED);
+	DrawRectangleLines((int)bounds.x, (int)bounds.y, (int)bounds.width, (int)bounds.height, LIGHTGRAY); // show the clip box
+	Algorithms::draw_polygon_outline_clipped(star, count, bounds, RED);
 }
-
 
 void draw_curve()
 {
-    Algorithms::draw_curve();
+	Algorithms::draw_curve();
 }
 
 void draw_bezier()
 {
-    Algorithms::draw_bezier();
+	Algorithms::draw_bezier();
 }
 
 // Used to draw a circle outline
@@ -96,7 +94,15 @@ RenderTexture2D filled_polygon;
 // Used to draw a polygon outline clipped to a box
 void draw_polygon_filled()
 {
-    DrawTexture(filled_polygon.texture, 0, 0, WHITE);
+	DrawTexture(filled_polygon.texture, 0, 0, WHITE);
+}
+
+// Global variable for drawing the ball with a pattern on it
+RenderTexture pattern_ball;
+
+void draw_pattern_ball()
+{
+	DrawTexturePro(pattern_ball.texture, Rectangle{0, 0, 360, 360}, Rectangle{0, 0, GRID_SIZE, -GRID_SIZE}, Vector2{0, 0}, 0, WHITE);
 }
 
 /*
@@ -104,29 +110,26 @@ void draw_polygon_filled()
  * This lets us position the curve wherever we need it.
  */
 void draw_quadratic_curve(Vector2 start, Vector2 control,
-                          Vector2 end, Color color)
+						  Vector2 end, Color color)
 {
-    const int segments = 30;
-    Vector2 previous = start;
+	const int segments = 30;
+	Vector2 previous = start;
 
-    for (int i = 1; i <= segments; i++)
-    {
-        float t = static_cast<float>(i) / segments;
-        float u = 1.0f - t;
+	for (int i = 1; i <= segments; i++)
+	{
+		float t = static_cast<float>(i) / segments;
+		float u = 1.0f - t;
 
-        Vector2 current = {
-            u * u * start.x + 2.0f * u * t * control.x
-                + t * t * end.x,
+		Vector2 current = {
+			u * u * start.x + 2.0f * u * t * control.x + t * t * end.x,
 
-            u * u * start.y + 2.0f * u * t * control.y
-                + t * t * end.y
-        };
+			u * u * start.y + 2.0f * u * t * control.y + t * t * end.y};
 
-        // Use the existing line drawing algorithm.
-        Algorithms::draw_line(previous, current, color);
+		// Use the existing line drawing algorithm.
+		Algorithms::draw_line(previous, current, color);
 
-        previous = current;
-    }
+		previous = current;
+	}
 }
 
 /*
@@ -136,49 +139,48 @@ void draw_quadratic_curve(Vector2 start, Vector2 control,
 
 void draw_ball()
 {
-    Vector2 centre = {200, 200};
+	Vector2 centre = {200, 200};
 
-    // 1. Pink ball body
-    Algorithms::draw_circle_filled(centre, 140.0f, PINK);
+	// 1. Pink ball body
+	Algorithms::draw_circle_filled(centre, 140.0f, PINK);
 
-    // 2. Curved seams across the ball
-    draw_quadratic_curve(
-        {96, 144}, {200, 96}, {304, 144}, DARKBLUE);
+	// 2. Curved seams across the ball
+	draw_quadratic_curve(
+		{96, 144}, {200, 96}, {304, 144}, DARKBLUE);
 
-    draw_quadratic_curve(
-        {96, 256}, {200, 304}, {304, 256}, DARKBLUE);
+	draw_quadratic_curve(
+		{96, 256}, {200, 304}, {304, 256}, DARKBLUE);
 
-    // 3. Straight lines forming the side patterns
-    Algorithms::draw_line(
-        {94, 176}, {164, 192}, DARKBLUE);
+	// 3. Straight lines forming the side patterns
+	Algorithms::draw_line(
+		{94, 176}, {164, 192}, DARKBLUE);
 
-    Algorithms::draw_line(
-        {94, 224}, {164, 208}, DARKBLUE);
+	Algorithms::draw_line(
+		{94, 224}, {164, 208}, DARKBLUE);
 
-    Algorithms::draw_line(
-        {306, 176}, {236, 192}, DARKBLUE);
+	Algorithms::draw_line(
+		{306, 176}, {236, 192}, DARKBLUE);
 
-    Algorithms::draw_line(
-        {306, 224}, {236, 208}, DARKBLUE);
+	Algorithms::draw_line(
+		{306, 224}, {236, 208}, DARKBLUE);
 
-    // 4. Hexagonal polygon in the centre
-    Vector2 panel[] = {
-        {200, 156},
-        {234, 180},
-        {234, 220},
-        {200, 244},
-        {166, 220},
-        {166, 180}
-    };
+	// 4. Hexagonal polygon in the centre
+	Vector2 panel[] = {
+		{200, 156},
+		{234, 180},
+		{234, 220},
+		{200, 244},
+		{166, 220},
+		{166, 180}};
 
-    size_t count = sizeof(panel) / sizeof(panel[0]);
+	size_t count = sizeof(panel) / sizeof(panel[0]);
 
-    Algorithms::draw_polygon_outline(
-        panel, count, MAROON);
+	Algorithms::draw_polygon_outline(
+		panel, count, MAROON);
 
-    // 5. Outer circular border
-    Algorithms::draw_circle_outline(
-        centre, 140.0f, DARKBLUE);
+	// 5. Outer circular border
+	Algorithms::draw_circle_outline(
+		centre, 140.0f, DARKBLUE);
 }
 
 RenderTexture2D canvas;
@@ -192,10 +194,16 @@ int main(int argc, char *argv[])
 	canvas = LoadRenderTexture(GRID_SIZE, GRID_SIZE);
 
 	filled_polygon = LoadRenderTexture(GRID_SIZE, GRID_SIZE);
-	Vector2 star[] = {{100, 15}, {125, 80}, {190, 85}, {140, 125}, {160, 190},
-					  {100, 150}, {40, 190}, {60, 125}, {10, 85}, {75, 80}};
-    size_t  count = sizeof(star) / sizeof(star[0]);
+	Vector2 star[] = {{100, 15}, {125, 80}, {190, 85}, {140, 125}, {160, 190}, {100, 150}, {40, 190}, {60, 125}, {10, 85}, {75, 80}};
+	size_t count = sizeof(star) / sizeof(star[0]);
 	Algorithms::draw_polygon_filled(filled_polygon, star, count, PINK);
+
+	// Ball with pattern drawn here using the algorithms implemented
+	pattern_ball = LoadRenderTexture(360, 360);
+	BeginTextureMode(pattern_ball);
+	ClearBackground(WHITE);
+	draw_ball();
+	EndTextureMode();
 
 	// Register all of the drawing functions here using the callback above
 	DrawTest tests[NO_TESTS] = {
@@ -209,7 +217,7 @@ int main(int argc, char *argv[])
 		{draw_ellipse_outline, "Ellipse Outline"},
 		{draw_ellipse_filled, "Ellipse Filled"},
 		{draw_polygon_filled, "Filled Polygon"},
-		{NULL, "Algorithm 11"},
+		{draw_pattern_ball, "Pattern Ball"},
 		{NULL, "Algorithm 12"},
 	};
 
@@ -260,7 +268,6 @@ int main(int argc, char *argv[])
 			}
 		}
 
-    draw_ball();
 		EndDrawing();
 	}
 
