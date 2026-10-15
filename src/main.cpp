@@ -183,6 +183,41 @@ void draw_ball()
 		centre, 140.0f, DARKBLUE);
 }
 
+// Texture for other images
+RenderTexture images;
+
+void draw_images() {
+	DrawTextureRec(images.texture, {0, 0, GRID_SIZE, -GRID_SIZE}, {0, 0}, WHITE);
+}
+
+void draw_spaceship(int x, int y, int s) {
+	DrawRectangle(x + 6*s, y + 0*s,  1*s, 1*s, WHITE);  // tip of the barrel
+    DrawRectangle(x + 5*s, y + 1*s,  3*s, 2*s, WHITE);  // turret
+    DrawRectangle(x + 1*s, y + 3*s, 11*s, 1*s, WHITE);  // shoulders
+    DrawRectangle(x + 0*s, y + 4*s, 13*s, 4*s, WHITE);
+}
+
+void draw_blockade(int x, int y, int s, Color c)
+{
+    DrawRectangle(x + 4*s, y + 0*s, 14*s, 1*s, c);
+    DrawRectangle(x + 3*s, y + 1*s, 16*s, 1*s, c);
+    DrawRectangle(x + 2*s, y + 2*s, 18*s, 1*s, c);
+ 
+    DrawRectangle(x, y + 3*s, 22*s, 9*s, c);
+ 
+    DrawRectangle(x,        y + 12*s, 7*s, 1*s, c);  DrawRectangle(x + 15*s, y + 12*s, 7*s, 1*s, c);
+    DrawRectangle(x,        y + 13*s, 6*s, 1*s, c);  DrawRectangle(x + 16*s, y + 13*s, 6*s, 1*s, c);
+    DrawRectangle(x,        y + 14*s, 5*s, 2*s, c);  DrawRectangle(x + 17*s, y + 14*s, 5*s, 2*s, c);
+}
+
+void draw_smiley_face(int x, int y) {
+	Algorithms::draw_circle_filled({static_cast<float>(x), static_cast<float>(y)}, 64, BROWN);
+	Algorithms::draw_ellipse_filled({static_cast<float>(x-20), static_cast<float>(y-28)}, 10, 20, WHITE);
+	Algorithms::draw_ellipse_filled({static_cast<float>(x+20), static_cast<float>(y-28)}, 10, 20, WHITE);
+	Algorithms::draw_ellipse_filled({static_cast<float>(x), static_cast<float>(y+28)}, 40, 10, RED);
+	Algorithms::draw_line({static_cast<float>(x-20), static_cast<float>(y+28)}, {static_cast<float>(x+20), static_cast<float>(y+28)}, BLACK);
+}
+
 RenderTexture2D canvas;
 
 int main(int argc, char *argv[])
@@ -205,6 +240,15 @@ int main(int argc, char *argv[])
 	draw_ball();
 	EndTextureMode();
 
+	// Draw a few more common images
+	images = LoadRenderTexture(GRID_SIZE, GRID_SIZE);
+	BeginTextureMode(images);
+	ClearBackground(BLACK);
+	draw_spaceship(20, GRID_SIZE-64, 3);
+	draw_blockade(20, 150, 3, GREEN);
+	draw_smiley_face(200, 150);
+	EndTextureMode();
+	
 	// Register all of the drawing functions here using the callback above
 	DrawTest tests[NO_TESTS] = {
 		{draw_line, "Line"},
@@ -218,7 +262,7 @@ int main(int argc, char *argv[])
 		{draw_ellipse_filled, "Ellipse Filled"},
 		{draw_polygon_filled, "Filled Polygon"},
 		{draw_pattern_ball, "Pattern Ball"},
-		{NULL, "Algorithm 12"},
+		{draw_images, "Other Images"},
 	};
 
 	SetTargetFPS(60);
@@ -274,6 +318,9 @@ int main(int argc, char *argv[])
 	// Release any allocated objects, like the RenderTexture
 	UnloadRenderTexture(canvas);
 	UnloadRenderTexture(filled_polygon);
+	UnloadRenderTexture(pattern_ball);
+	UnloadRenderTexture(images);
+	
 
 	CloseWindow();
 
