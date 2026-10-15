@@ -5,7 +5,7 @@
 #include "algorithms/polygon.hpp"
 
 constexpr int GRID_ROWS = 2;
-constexpr int GRID_COLS = 5;
+constexpr int GRID_COLS = 6;
 constexpr int GRID_SPACING = 1;
 
 // Let each grid be 200x200 pixels
@@ -17,7 +17,7 @@ constexpr int GRID_TITLE = 64;
 constexpr int SCREEN_WIDTH = (GRID_SIZE * GRID_COLS) + (GRID_SPACING * (GRID_COLS - 1));
 constexpr int SCREEN_HEIGHT = ((GRID_SIZE + GRID_TITLE) * GRID_ROWS) + (GRID_SPACING * (GRID_ROWS - 1));
 
-constexpr size_t NO_TESTS = 9;
+constexpr size_t NO_TESTS = 12;
 
 // Drawing callback function type
 typedef void (*draw_cb)();
@@ -109,10 +109,9 @@ int main(int argc, char *argv[])
 		{draw_circle_filled, "Circle Filled"},
 		{draw_ellipse_outline, "Ellipse Outline"},
 		{draw_ellipse_filled, "Ellipse Filled"},
-		{NULL, "Algorithm 6"},
-		{NULL, "Algorithm 7"},
-		{NULL, "Algorithm 8"},
-		{NULL, "Algorithm 9"},
+		{NULL, "Algorithm 10"},
+		{NULL, "Algorithm 11"},
+		{NULL, "Algorithm 12"},
 	};
 
 	SetTargetFPS(60);
