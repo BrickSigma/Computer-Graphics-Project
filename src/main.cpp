@@ -66,6 +66,29 @@ void draw_bezier()
     Algorithms::draw_bezier();
 }
 
+// Used to draw a circle outline
+void draw_circle_outline()
+{
+	Algorithms::draw_circle_outline(Vector2{100, 100}, 70.0f, BLUE);
+}
+
+// Used to draw a filled circle
+void draw_circle_filled()
+{
+	Algorithms::draw_circle_filled(Vector2{100, 100}, 70.0f, MAROON);
+}
+
+// Used to draw an ellipse outline
+void draw_ellipse_outline()
+{
+	Algorithms::draw_ellipse_outline(Vector2{100, 100}, 80.0f, 45.0f, DARKGREEN);
+}
+
+// Used to draw a filled ellipse
+void draw_ellipse_filled()
+{
+	Algorithms::draw_ellipse_filled(Vector2{100, 100}, 80.0f, 45.0f, PURPLE);
+}
 
 int main(int argc, char *argv[])
 {
@@ -82,6 +105,10 @@ int main(int argc, char *argv[])
 		{draw_polygon_clipped, "Polygon Clip"},
 		{draw_curve, "Curve"},
 		{draw_bezier, "Bezier Curve"},
+		{draw_circle_outline, "Circle Outline"},
+		{draw_circle_filled, "Circle Filled"},
+		{draw_ellipse_outline, "Ellipse Outline"},
+		{draw_ellipse_filled, "Ellipse Filled"},
 		{NULL, "Algorithm 6"},
 		{NULL, "Algorithm 7"},
 		{NULL, "Algorithm 8"},
