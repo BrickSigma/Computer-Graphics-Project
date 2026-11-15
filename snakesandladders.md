@@ -1,10 +1,10 @@
-# Snakes & Ladders
+# Snakes and Ladders
 
 A self-contained, single-file C++17 desktop game built with [raylib](https://www.raylib.com/). It features a pastel retro-pixel aesthetic with animated sprites, curved snakes, angled ladders, a status tracker, and a victory modal—all drawn procedurally in code with **zero external image or font files required**.
 
 ---
 
-## Gameplay & Controls
+## Gameplay and Controls
 
 - **Objective:** Start on square **1** (`START`) and reach square **100** (the golden crown) using an exact dice roll. If a roll exceeds 100, your character stays put until the next turn.
 - **Ladders (Climb Up):** `4 → 25`, `13 → 46`, `33 → 49`, `42 → 63`, `50 → 69`, `62 → 81`, `74 → 92`
